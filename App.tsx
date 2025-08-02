@@ -1,37 +1,60 @@
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import TrustBadges from './components/TrustBadges';
-import Benefits from './components/Benefits';
-import TrustSection from './components/TrustSection';
-import QuoteForm from './components/QuoteForm';
-import Testimonials from './components/Testimonials';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
 import WaveSeparator from './components/WaveSeparator';
-import OfferButton from './components/OfferButton';
-import InsurancePolicies from './components/InsurancePolicies';
+import Loader from './components/Loader';
+import ErrorBoundary from './components/ErrorBoundary';
+
+// Carga diferida de componentes pesados
+const TrustBadges = lazy(() => import('./components/TrustBadges'));
+const Benefits = lazy(() => import('./components/Benefits'));
+const TrustSection = lazy(() => import('./components/TrustSection'));
+const QuoteForm = lazy(() => import('./components/QuoteForm'));
+const Testimonials = lazy(() => import('./components/Testimonials'));
+const Contact = lazy(() => import('./components/Contact'));
+const Footer = lazy(() => import('./components/Footer'));
+const OfferButton = lazy(() => import('./components/OfferButton'));
+const InsurancePolicies = lazy(() => import('./components/InsurancePolicies'));
 
 const App: React.FC = () => {
   return (
-    <div className="bg-[#F8F9FA]">
+    <div className="bg-[#F8F9FA] min-h-screen flex flex-col">
       <Header />
-      <main>
-        <Hero />
-        <TrustBadges />
-        <Benefits />
-        <WaveSeparator direction="down" fillColor="#212529" height="100px" />
-        <TrustSection />
-        <QuoteForm />
-        <WaveSeparator direction="up" fillColor="#F8F9FA" height="80px" />
-        <InsurancePolicies />
-        <WaveSeparator direction="down" fillColor="#F8F9FA" height="80px" />
-        <Testimonials />
-        <Contact />
+      <main className="flex-grow">
+        <ErrorBoundary>
+          <Hero />
+          
+          <Suspense fallback={<Loader />}>
+            <TrustBadges />
+            <QuoteForm />
+            <WaveSeparator direction="down" fillColor="#F8F9FA" height="80px" />
+            <Benefits />
+            <WaveSeparator direction="down" fillColor="#212529" height="100px" />
+            <TrustSection />
+            <InsurancePolicies />
+            <WaveSeparator direction="down" fillColor="#F8F9FA" height="80px" />
+            <Testimonials />
+            <Contact />
+          </Suspense>
+        </ErrorBoundary>
       </main>
-      <Footer />
-      <OfferButton />
+      
+      <Suspense fallback={null}>
+        <Footer />
+        <OfferButton />
+      </Suspense>
+      
+      {/* Script de Google Analytics */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+      <script>
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-XXXXXXXXXX');
+        `}
+      </script>
     </div>
   );
 };

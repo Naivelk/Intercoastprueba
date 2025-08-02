@@ -94,7 +94,7 @@ const Header: React.FC = () => {
                 </a>
               ))}
               <a 
-                href="tel:+18001234567" 
+                href="tel:+15623812012" 
                 className="ml-4 px-4 py-1.5 bg-green-600 text-white rounded-full text-sm font-medium hover:bg-green-700 transition-colors whitespace-nowrap"
               >
                 <PhoneIcon className="inline h-3 w-3 mr-1.5" />
@@ -138,7 +138,7 @@ const Header: React.FC = () => {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2" ref={menuRef}>
             <a 
-              href="tel:+18001234567"
+              href="tel:+15623812012"
               className="p-1.5 text-green-600 hover:text-green-700"
               aria-label="Llamar"
             >
@@ -243,7 +243,7 @@ const Header: React.FC = () => {
                     </button>
                   </div>
                   <a 
-                    href="tel:+18001234567" 
+                    href="tel:+15623812012" 
                     className="block w-full px-4 py-2.5 bg-green-600 text-white rounded-full text-sm font-medium hover:bg-green-700 flex items-center justify-center transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -251,7 +251,7 @@ const Header: React.FC = () => {
                     }}
                   >
                     <PhoneIcon className="h-4 w-4 mr-1.5" />
-                    <span>¡Llama Ahora! (800) 123-4567</span>
+                    <span>¡Llama Ahora! (562) 381-2012</span>
                   </a>
                 </div>
               </div>

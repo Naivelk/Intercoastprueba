@@ -56,7 +56,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
     
     return result as T;
-  }, []);
+  }, [language]);
 
   // Función para cambiar el idioma
   const setLanguage = useCallback((newLanguage: Language) => {

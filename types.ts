@@ -1,8 +1,10 @@
 
 export type Language = 'es' | 'en';
 
-export type TranslationValue = string | string[] | TranslationKeys;
+type Primitive = string | number | boolean | null | undefined;
 
-export interface TranslationKeys {
-  [key: string]: TranslationValue | TranslationKeys;
-}
+export type TranslationValue = Primitive | { [key: string]: any } | any[];
+
+export type TranslationKeys = {
+  [key: string]: any;
+};

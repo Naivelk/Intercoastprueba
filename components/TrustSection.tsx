@@ -20,16 +20,16 @@ const TrustSection: React.FC = () => {
   const { t } = useLanguage();
   
   const trustData = [
-    { icon: <FileCheck2Icon className="h-12 w-12" />, titleKey: 'trustSection.license', subtitle: '#0K94627' },
-    { icon: <UsersIcon className="h-12 w-12" />, titleKey: 'trustSection.clients', subtitle: t('trustSection.clientsSub') },
-    { icon: <ThumbsUpIcon className="h-12 w-12" />, titleKey: 'trustSection.experience', subtitle: t('trustSection.experienceSub') },
+    { icon: <FileCheck2Icon className="h-12 w-12" />, titleKey: 'home.trust.items.license.title', subtitle: t('home.trust.items.license.subtitle') },
+    { icon: <UsersIcon className="h-12 w-12" />, titleKey: 'home.trust.items.clients.title', subtitle: t('home.trust.items.clients.subtitle') },
+    { icon: <ThumbsUpIcon className="h-12 w-12" />, titleKey: 'home.trust.items.experience.title', subtitle: t('home.trust.items.experience.subtitle') },
   ];
 
   return (
     <section className="pt-20 pb-44 bg-[#212529] text-white relative overflow-hidden" id="trust-section">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-4xl font-bold mb-4">{t('trustSection.title')}</h2>
-        <p className="text-gray-300 mb-12 max-w-3xl mx-auto text-lg">{t('trustSection.subtitle')}</p>
+        <h2 className="text-4xl font-bold mb-4">{t('home.trust.title')}</h2>
+        <p className="text-gray-300 mb-12 max-w-3xl mx-auto text-lg">{t('home.trust.subtitle')}</p>
         <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
           {trustData.map((item, index) => (
             <TrustItem key={index} {...item} />

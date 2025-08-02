@@ -7,9 +7,9 @@ const TrustBadges: React.FC = () => {
   const { t } = useLanguage();
 
   const badges = [
-    { icon: <LockIcon className="text-[#2ECC71] h-7 w-7" />, textKey: 'trustBadges.secure' },
-    { icon: <StarIcon className="text-yellow-500 fill-yellow-500 h-7 w-7" />, textKey: 'trustBadges.google' },
-    { icon: <AwardIcon className="text-blue-800 h-7 w-7" />, textKey: 'trustBadges.bbb' },
+    { icon: <LockIcon className="text-[#2ECC71] h-7 w-7" />, textKey: 'hero.trustBadges.secure' },
+    { icon: <StarIcon className="text-yellow-500 fill-yellow-500 h-7 w-7" />, textKey: 'hero.trustBadges.google' },
+    { icon: <AwardIcon className="text-blue-800 h-7 w-7" />, textKey: 'hero.trustBadges.bbb' },
   ];
 
   return (

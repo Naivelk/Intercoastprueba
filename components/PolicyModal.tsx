@@ -17,7 +17,9 @@ interface PolicyModalProps {
     coverages: string[];
     benefits: string[];
     gradient: string;
-    type: string;
+    type: 'auto' | 'home' | 'motorcycle' | 'boat';
+    description: string;
+    coverageType: string[];
   } | null;
 }
 
@@ -70,14 +72,7 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose, policy }) =>
   
   const carouselImages = getCarouselImages(policy.type);
   
-  // Get translated coverages and benefits based on policy type
-  const translatedCoverages = policy.coverages.map((_, index) => 
-    t(`policyModal.${policy.type}.coverages.${index}`)
-  );
-  
-  const translatedBenefits = policy.benefits.map((_, index) => 
-    t(`policyModal.${policy.type}.benefits.${index}`)
-  );
+
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -197,7 +192,7 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose, policy }) =>
                         {t('policyModal.includedCoverages')}
                       </h4>
                       <ul className="space-y-3">
-                        {translatedCoverages.map((coverage, idx) => (
+                        {Array.isArray(policy.coverages) && policy.coverages.map((coverage, idx) => (
                           <li key={idx} className="flex items-start">
                             <span className="text-green-500 mr-2 mt-1">✓</span>
                             <span className="text-gray-700">{coverage}</span>
@@ -212,7 +207,7 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose, policy }) =>
                         {t('policyModal.keyBenefits')}
                       </h4>
                       <ul className="space-y-3">
-                        {translatedBenefits.map((benefit, idx) => (
+                        {Array.isArray(policy.benefits) && policy.benefits.map((benefit, idx) => (
                           <li key={idx} className="flex items-start">
                             <span className="text-blue-500 mr-2 mt-1">•</span>
                             <span className="text-gray-700">{benefit}</span>

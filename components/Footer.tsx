@@ -122,8 +122,12 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <MapPinIcon className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-300 text-sm">{t('footer.address')}</span>
+                <MapPinIcon className="h-5 w-5 text-gray-400 mr-3 mt-1" />
+                <div className="text-gray-300 text-sm">
+                  {t('footer.address').split('|').map((line: string, index: number) => (
+                    <p key={index}>{line.trim()}</p>
+                  ))}
+                </div>
               </li>
               <li className="flex items-center">
                 <PhoneCallIcon className="h-5 w-5 text-gray-400 mr-3" />
@@ -215,7 +219,7 @@ const Footer: React.FC = () => {
                 href="#" 
                 className="text-gray-500 hover:text-white text-xs transition-colors"
               >
-                Política de Privacidad
+                {t('footer.navPrivacy')}
               </a>
             </div>
           </div>

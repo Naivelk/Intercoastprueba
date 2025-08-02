@@ -1,7 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
-import { ShieldCheckIcon } from './icons';
+import { ShieldCheckIcon, CheckCircleIcon, LightningBoltIcon, ClockIcon } from './icons';
 import Logo from './Logo';
+
+const FeatureItem: React.FC<{ icon: React.ReactNode; text: string; delay?: number }> = ({ icon, text, delay = 0 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 200 + (delay * 100));
+    
+    return () => clearTimeout(timer);
+  }, [delay]);
+  
+  return (
+    <div 
+      className={`
+        flex items-center justify-center gap-2 
+        bg-gradient-to-r from-red-50/95 to-red-100/95
+        backdrop-blur-sm px-4 py-2 rounded-full
+        border border-red-100/80
+        transform transition-all duration-500 ease-out
+        hover:shadow-lg hover:shadow-red-200/20 hover:scale-105
+        hover:border-red-200
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+      `}
+    >
+      <span className="text-red-500">{icon}</span>
+      <span className="text-sm md:text-base font-medium text-red-600">{text}</span>
+    </div>
+  );
+};
 
 const Hero: React.FC = () => {
   const { t } = useLanguage();
@@ -14,8 +44,52 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-br from-[#003E73] to-[#007BFF] text-white relative overflow-hidden pt-16 md:pt-20">
-      <div className="container mx-auto px-6 pb-32 md:pb-40 text-center">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#003E73] to-[#007BFF] text-white">
+      {/* Degradado adicional en la parte inferior */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#003E73] to-transparent"></div>
+      {/* Imagen izquierda, completamente responsiva */}
+      <div 
+        className="
+          hidden md:block absolute z-0 pointer-events-none
+          left-[5%] top-1/2 -translate-y-1/2
+          w-[22vw] max-w-[340px] min-w-[160px]
+        " 
+        style={{minHeight: '160px'}}
+      >
+        <img
+          src="/hero/izquierda3.png"
+          alt="Seguro"
+          className="w-full h-auto object-contain"
+          draggable={false}
+          onError={(e) => console.error('Error cargando imagen izquierda:', e)}
+        />
+      </div>
+
+      {/* Imagen derecha, completamente responsiva */}
+      <div 
+        className="
+          hidden md:block absolute z-0 pointer-events-none
+          right-0 top-1/2
+          w-[29vw] max-w-[480px] min-w-[200px]
+        " 
+        style={{height: 'auto', transform: 'translateY(-15%)'}}
+      >
+        <img
+          src="/hero/derecha2.png"
+          alt="Carro y moto"
+          className="w-full h-auto object-contain"
+          draggable={false}
+          onError={(e) => console.error('Error cargando imagen derecha:', e)}
+        />
+      </div>
+
+      {/* Contenido central */}
+      <div className="
+          relative z-10 container mx-auto px-6
+          pb-32 md:pb-40 text-center
+          max-w-5xl
+          xl:px-[17vw]
+        ">
         {/* Logo con animación */}
         <div 
           className={`flex justify-center mb-4 md:mb-6 transition-all duration-1000 ease-out transform ${
@@ -24,7 +98,7 @@ const Hero: React.FC = () => {
         >
           <Logo 
             variant="white" 
-            className="h-32 md:h-40 w-auto max-w-[400px] md:max-w-[600px]" 
+            className="h-32 md:h-40 w-auto max-w-[400px] md:max-w-[600px] drop-shadow-lg" 
             width={600}
           />
         </div>
@@ -32,40 +106,69 @@ const Hero: React.FC = () => {
         <div className={`max-w-5xl mx-auto transition-all duration-1000 delay-100 ${
           isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
             {t('hero.title')}
           </h1>
-          <p className="text-lg md:text-xl mb-16 max-w-3xl mx-auto drop-shadow-md px-4">
+          <p className="text-lg md:text-xl mb-8 max-w-3xl mx-auto drop-shadow-md px-4">
             {t('hero.subtitle')}
           </p>
-          <a
-            href="#quote-form"
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full inline-flex items-center justify-center gap-2 transition-all duration-300 shadow-lg transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            aria-label={t('hero.cta')}
-          >
-            <ShieldCheckIcon className="h-6 w-6" />
-            <span className="whitespace-nowrap">{t('hero.cta')}</span>
-          </a>
+          
+          {/* Características destacadas */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16 max-w-3xl mx-auto">
+            <FeatureItem 
+              icon={<CheckCircleIcon className="h-5 w-5" />} 
+              text={t('hero.features.secure')}
+              delay={0}
+            />
+            <FeatureItem 
+              icon={<LightningBoltIcon className="h-5 w-5" />} 
+              text={t('hero.features.fast')}
+              delay={1}
+            />
+            <FeatureItem 
+              icon={<ClockIcon className="h-5 w-5" />} 
+              text={t('hero.features.easy')}
+              delay={2}
+            />
+          </div>
+
+          {/* Botón de cotización eliminado */}
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+      <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
         <svg
-          data-name="Layer 1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 120"
+          viewBox="0 0 1920 160"
           preserveAspectRatio="none"
-          style={{ width: 'calc(100% + 1.3px)', height: '100px' }}
+          className="min-w-[110%] h-20 md:h-24 block -ml-1"
         >
           <path
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-            style={{ fill: '#F8F9FA' }}
-          ></path>
+            fill="#ffffff"
+            d="M0,96C120,128,240,160,480,160C720,160,960,96,1200,80C1440,64,1680,96,1920,112L1920,160L0,160Z"
+          />
         </svg>
       </div>
+      
+      {/* Estilos globales para animaciones */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+          }
+          .animate-blob {
+            animation: blob 7s infinite;
+          }
+          .animation-delay-2000 {
+            animation-delay: 2s;
+          }
+          .animation-delay-4000 {
+            animation-delay: 4s;
+          }
+
+        `
+      }} />
     </section>
   );
 };

@@ -128,7 +128,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
         <div className="mt-2 mb-4">
           <h4 className="text-sm font-semibold text-gray-800 mb-2">Incluye:</h4>
           <ul className="space-y-2">
-            {featuresKey.map((feature, index) => (
+            {Array.isArray(featuresKey) && featuresKey.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
                 <span className="text-sm text-gray-700">{feature}</span>
@@ -178,7 +178,7 @@ const Benefits: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-gray-50" id="benefits">
+    <section className="py-20 bg-white" id="benefits">
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto px-4">
           <span className="inline-block bg-blue-100 text-blue-600 text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1 rounded-full mb-3 sm:mb-4">

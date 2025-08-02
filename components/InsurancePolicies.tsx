@@ -50,7 +50,7 @@ const PolicyCard: React.FC<PolicyCardProps> = ({
       <div className="flex justify-between items-start p-4">
         <div className={`h-2 ${gradient} rounded-full flex-1 mt-2`}></div>
         <div className="flex flex-wrap justify-end gap-1 ml-2">
-          {coverageType.map((type, idx) => (
+          {Array.isArray(coverageType) && coverageType.map((type, idx) => (
             <span 
               key={idx}
               className="text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-700"
@@ -100,96 +100,54 @@ const InsurancePolicies: React.FC = () => {
   const [selectedPolicy, setSelectedPolicy] = useState<typeof policies[number] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const policies = [
+  const policies: PolicyType[] = [
     {
       icon: <Car />,
-      title: t('policies.auto.title'),
-      description: t('policies.auto.description'),
+      title: t('policies.cards.auto.title'),
+      description: t('policies.cards.auto.description'),
       emoji: '🚗',
-      gradient: 'from-blue-500 to-blue-600',
+      gradient: 'from-blue-500 to-cyan-500',
       delay: '100',
       type: 'auto',
-      coverageType: ['Cobertura Total', 'Daños a Terceros', 'Asistencia Vial'],
-      coverages: [
-        '✅ Responsabilidad civil por daños a terceros (obligatoria en California)',
-        '🚘 Daños al vehículo propio por accidente',
-        '🔧 Asistencia en carretera (grúa, cambio de llanta, batería)',
-        '🛡️ Protección contra robo, vandalismo y desastres naturales',
-        '👨‍⚕️ Gastos médicos para conductor y pasajeros',
-        '🔄 Cobertura de autos alquilados y reemplazo'
-      ],
-      benefits: [
-        'Cotización rápida',
-        'Personalizable según tu presupuesto',
-        'Ideal para autos nuevos o usados'
-      ]
+      coverageType: t<string[]>('policies.cards.auto.coverageType'),
+      coverages: t<string[]>('policies.cards.auto.coverages'),
+      benefits: t<string[]>('policies.cards.auto.benefits')
     },
     {
       icon: <Home />,
-      title: t('policies.home.title'),
-      description: t('policies.home.description'),
+      title: t('policies.cards.home.title'),
+      description: t('policies.cards.home.description'),
       emoji: '🏠',
-      gradient: 'from-green-500 to-teal-500',
+      gradient: 'from-teal-500 to-emerald-500',
       delay: '200',
       type: 'home',
-      coverageType: ['Cobertura Integral', 'Responsabilidad Civil', 'Daños Materiales'],
-      coverages: [
-        '🔥 Incendios, explosiones, humo',
-        '🌪️ Daños por tormentas, granizo o sismos (según la región)',
-        '🧯 Robo o vandalismo',
-        '💧 Fugas de agua o daños por plomería',
-        '📦 Bienes personales (electrodomésticos, joyas, computadoras)',
-        '👷 Responsabilidad civil si alguien se lesiona en tu propiedad'
-      ],
-      benefits: [
-        'Tranquilidad para tu inversión más importante',
-        'Protección del hogar y todo lo que contiene',
-        'Opciones con y sin deducible'
-      ]
+      coverageType: t<string[]>('policies.cards.home.coverageType'),
+      coverages: t<string[]>('policies.cards.home.coverages'),
+      benefits: t<string[]>('policies.cards.home.benefits')
     },
     {
       icon: <Bike />,
-      title: t('policies.motorcycle.title'),
-      description: t('policies.motorcycle.description'),
+      title: t('policies.cards.motorcycle.title'),
+      description: t('policies.cards.motorcycle.description'),
       emoji: '🏍️',
       gradient: 'from-amber-500 to-orange-500',
       delay: '300',
       type: 'motorcycle',
-      coverageType: ['Cobertura Básica', 'Robo Total', 'Asistencia en Ruta'],
-      coverages: [
-        '🛵 Daños a tu moto en caso de accidente o caída',
-        '🚧 Daños a terceros y sus bienes',
-        '🚑 Cobertura médica al conductor',
-        '🛠 Asistencia en ruta y reparación',
-        '🔐 Robo total o parcial'
-      ],
-      benefits: [
-        'Protege tus recorridos diarios y de fin de semana',
-        'Ahorro en reparaciones y responsabilidad legal',
-        'Ideal para motos deportivas o de uso personal'
-      ]
+      coverageType: t<string[]>('policies.cards.motorcycle.coverageType'),
+      coverages: t<string[]>('policies.cards.motorcycle.coverages'),
+      benefits: t<string[]>('policies.cards.motorcycle.benefits')
     },
     {
       icon: <Sailboat />,
-      title: t('policies.boat.title'),
-      description: t('policies.boat.description'),
+      title: t('policies.cards.boat.title'),
+      description: t('policies.cards.boat.description'),
       emoji: '⛵',
       gradient: 'from-indigo-500 to-purple-600',
       delay: '400',
       type: 'boat',
-      coverageType: ['Casco Náutico', 'Responsabilidad Civil', 'Asistencia Náutica'],
-      coverages: [
-        '⚓ Daños físicos al bote (colisión, varada, incendio)',
-        '💼 Responsabilidad civil por lesiones a terceros',
-        '🧭 Robo, vandalismo o hundimiento',
-        '🛠 Remolque de emergencia',
-        '⚠ Daños en muelles, rampas o durante transporte'
-      ],
-      benefits: [
-        'Navega con seguridad y confianza',
-        'Cobertura tanto en el agua como fuera de ella',
-        'Ideal para embarcaciones recreativas, jetskis, y lanchas'
-      ]
+      coverageType: t<string[]>('policies.cards.boat.coverageType'),
+      coverages: t<string[]>('policies.cards.boat.coverages'),
+      benefits: t<string[]>('policies.cards.boat.benefits')
     }
   ];
 
@@ -199,11 +157,11 @@ const InsurancePolicies: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gray-50" id="policies">
+    <section className="py-16 bg-white" id="policies">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full mb-4">
-            {t('policies.subtitleBadge')}
+            {t('policies.badge')}
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('policies.title')}
