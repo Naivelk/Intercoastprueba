@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { openChatbot } from './chatbot/eventBus';
+import { estimatePriceFromConfig } from './pricing/sharedRateConfig';
 
 // Utilidad para decodificar el VIN usando la API pública de NHTSA
 type VinData = {
@@ -253,6 +255,20 @@ export default function QuoteFormReact() {
 
   const { t, language, setLanguage } = useLanguage();
 
+  // Proactive assistance: open chatbot if the user hesitates on the form
+  const helpShownRef = React.useRef(false);
+  React.useEffect(() => {
+    // If there's activity, reset an inactivity timer
+    if (helpShownRef.current) return;
+    const timer = window.setTimeout(() => {
+      if (!helpShownRef.current) {
+        helpShownRef.current = true;
+        openChatbot('Veo que estás haciendo tu cotización. ¿Quieres que te ayude por aquí? 😊');
+      }
+    }, 25000); // 25s of inactivity
+    return () => window.clearTimeout(timer);
+  }, [vins, nombre, nacimiento, correo, telefono, documento, direccion, cantidadVehiculos]);
+
   // Actualiza los campos VIN según la cantidad de vehículos
   React.useEffect(() => {
     setVins(vins => Array(cantidadVehiculos).fill("").map((v, i) => vins[i] || ""));
@@ -280,7 +296,7 @@ export default function QuoteFormReact() {
         const v = await decodeVIN2Steps(vins[i]);
         if (!v.year || !v.make || !v.model) throw new Error(`No se pudo decodificar el VIN del vehículo ${i + 1}.`);
         // Calcular estimado individual
-        const estimado = estimatePrice(v);
+        const estimado = estimatePriceFromConfig(v as any);
         estimadoTotal += estimado;
         estimadosIndividuales.push(estimado);
         vehiculos.push({
@@ -373,6 +389,11 @@ export default function QuoteFormReact() {
       });
     } catch (err: any) {
       setError(err.message || "Error inesperado");
+      // Offer help via chatbot if an error happens
+      if (!helpShownRef.current) {
+        helpShownRef.current = true;
+        openChatbot('Puedo ayudarte a completar tu cotización por chat y estimar tu precio. ¿Te gustaría continuar con Eva?');
+      }
     } finally {
       setLoading(false);
     }
@@ -414,7 +435,7 @@ export default function QuoteFormReact() {
                 className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition"
                 value={vins[idx] || ''}
                 onChange={e => handleVinChange(idx, e.target.value)}
-                placeholder={t('quoteForm.vinPlaceholder')}
+                placeholder={t('quoteForm.vinPlaceholder') as string}
                 maxLength={17}
                 required
               />
@@ -426,7 +447,7 @@ export default function QuoteFormReact() {
             className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition mb-2"
             value={nombre}
             onChange={e => setNombre(e.target.value)}
-            placeholder={t('quoteForm.namePlaceholder')}
+            placeholder={t('quoteForm.namePlaceholder') as string}
             required
           />
           <label className="block font-bold text-rose-700 mb-1">📧 {t('quoteForm.emailLabel')}</label>
@@ -435,7 +456,7 @@ export default function QuoteFormReact() {
             className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition mb-2"
             value={correo}
             onChange={e => setCorreo(e.target.value)}
-            placeholder={t('quoteForm.emailPlaceholder')}
+            placeholder={t('quoteForm.emailPlaceholder') as string}
             required
           />
           <label className="block font-bold text-rose-700 mb-1">📱 {t('quoteForm.phoneLabel')}</label>
@@ -444,7 +465,7 @@ export default function QuoteFormReact() {
             className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition mb-2"
             value={telefono}
             onChange={e => setTelefono(e.target.value)}
-            placeholder={t('quoteForm.phonePlaceholder')}
+            placeholder={t('quoteForm.phonePlaceholder') as string}
             required
           />
           <label className="block font-bold text-rose-700 mb-1">🪪 {t('quoteForm.idLabel')}</label>
@@ -453,7 +474,7 @@ export default function QuoteFormReact() {
             className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition mb-2"
             value={documento}
             onChange={e => setDocumento(e.target.value)}
-            placeholder={t('quoteForm.idPlaceholder')}
+            placeholder={t('quoteForm.idPlaceholder') as string}
             required
           />
           <label className="block font-bold text-rose-700 mb-1">🏠 {t('quoteForm.addressLabel')}</label>
@@ -462,7 +483,7 @@ export default function QuoteFormReact() {
             className="w-full border border-rose-200 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 bg-white transition mb-4"
             value={direccion}
             onChange={e => setDireccion(e.target.value)}
-            placeholder={t('quoteForm.addressPlaceholder')}
+            placeholder={t('quoteForm.addressPlaceholder') as string}
             required
           />
           <button type="submit" className="w-full bg-gradient-to-r from-rose-500 via-rose-400 to-red-400 text-white font-extrabold py-3 rounded-xl mt-2 shadow-lg hover:scale-105 hover:shadow-rose-300 transition-all text-lg tracking-wide disabled:opacity-60" disabled={loading}>

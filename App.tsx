@@ -1,10 +1,11 @@
 
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WaveSeparator from './components/WaveSeparator';
 import Loader from './components/Loader';
 import ErrorBoundary from './components/ErrorBoundary';
+import { Chatbot } from './components/chatbot';
 
 // Carga diferida de componentes pesados
 const TrustBadges = lazy(() => import('./components/TrustBadges'));
@@ -44,6 +45,9 @@ const App: React.FC = () => {
         <Footer />
         <OfferButton />
       </Suspense>
+      
+      {/* Chatbot de Asistencia */}
+      <Chatbot />
       
       {/* Script de Google Analytics */}
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
