@@ -1,14 +1,15 @@
 import React from 'react';
 
 export default function EvaMascotCTA() {
-  const openChat = () => {
+  const openChat = (e?: React.MouseEvent) => {
+    try { e?.stopPropagation(); } catch {}
     try {
+      // Prefer imperative API if present
+      const w = window as any;
+      if (typeof w.evaOpenDock === 'function') { w.evaOpenDock(); }
+      // Always emit events as well for compatibility
       window.dispatchEvent(new CustomEvent('eva:dock:open'));
       window.dispatchEvent(new CustomEvent('eva:sound:open'));
-      // Fallback toggle shortly after to handle edge event listeners
-      setTimeout(() => {
-        try { window.dispatchEvent(new CustomEvent('eva:toggle')); } catch {}
-      }, 30);
     } catch {}
   };
 
@@ -34,8 +35,15 @@ export default function EvaMascotCTA() {
 
         <div className="grid items-center gap-6 p-6 md:grid-cols-[minmax(280px,420px)_1fr] md:p-10">
           {/* Ilustración */}
-          <div className="relative grid place-items-center">
-            <button onClick={openChat} aria-label="Abrir chat con EVA" className="focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-2xl">
+          <div className="relative grid place-items-center pointer-events-auto">
+            <button
+              type="button"
+              onClick={openChat}
+              onMouseDown={openChat}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { openChat(e as any); } }}
+              aria-label="Abrir chat con EVA"
+              className="focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-2xl"
+            >
               <picture>
                 <source srcSet="/eva/eva-baby-cta-1200.webp" media="(min-width: 768px)" type="image/webp" />
                 <source srcSet="/eva/eva-baby-cta-720.webp" type="image/webp" />
@@ -64,7 +72,10 @@ export default function EvaMascotCTA() {
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <button
+                type="button"
                 onClick={openChat}
+                onMouseDown={openChat}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { openChat(e as any); } }}
                 className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3
                            font-semibold text-white shadow hover:bg-emerald-600 focus:outline-none focus:ring-2
                            focus:ring-emerald-400 focus:ring-offset-2"

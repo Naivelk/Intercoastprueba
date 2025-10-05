@@ -16,10 +16,24 @@ export default function EvaPhoneDock({ children }: { children?: React.ReactNode 
     window.addEventListener('eva:toggle', onToggle);
     window.addEventListener('eva:dock:open', onOpen);
     window.addEventListener('eva:dock:close', onClose);
+    // Expose safe imperative API
+    (window as any).evaOpenDock = onOpen;
+    (window as any).evaCloseDock = onClose;
+    // URL hash fallback: #chat opens, removing hash closes
+    const onHash = () => {
+      if (typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('chat')) {
+        onOpen();
+      }
+    };
+    window.addEventListener('hashchange', onHash);
+    // initial check
+    onHash();
     return () => {
       window.removeEventListener('eva:toggle', onToggle);
       window.removeEventListener('eva:dock:open', onOpen);
       window.removeEventListener('eva:dock:close', onClose);
+      window.removeEventListener('hashchange', onHash);
+      try { delete (window as any).evaOpenDock; delete (window as any).evaCloseDock; } catch {}
     };
   }, []);
 
@@ -27,8 +41,18 @@ export default function EvaPhoneDock({ children }: { children?: React.ReactNode 
     if (open) {
       // lock background scroll
       document.documentElement.style.overflow = 'hidden';
+      try {
+        if (!window.location.hash.toLowerCase().includes('chat')) {
+          history.replaceState(null, '', '#chat');
+        }
+      } catch {}
     } else {
       document.documentElement.style.overflow = '';
+      try {
+        if (window.location.hash.toLowerCase().includes('chat')) {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+      } catch {}
     }
     return () => { document.documentElement.style.overflow = ''; };
   }, [open]);
