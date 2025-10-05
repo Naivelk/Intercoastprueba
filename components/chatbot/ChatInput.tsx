@@ -62,7 +62,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           placeholder={placeholder}
           disabled={isDisabled}
           maxLength={maxMessageLength}
-          className="w-full px-4 py-3 pr-12 text-gray-800 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden relative z-50"
+          className="w-full px-4 py-3 pr-14 text-gray-800 bg-white border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-2 resize-none overflow-hidden relative z-50"
           rows={1}
           style={{
             minHeight: '48px',
@@ -77,14 +77,15 @@ const ChatInput: React.FC<ChatInputProps> = ({
         <button
           type="submit"
           disabled={!message.trim() || isDisabled}
-          className={`absolute right-2 bottom-2 p-2 rounded-full ${
+          className={`absolute right-2 bottom-2 h-11 w-11 inline-flex items-center justify-center rounded-full ${
             message.trim() && !isDisabled
-              ? 'text-white bg-blue-500 hover:bg-blue-600'
+              ? 'text-white bg-sky-500 hover:bg-sky-600'
               : 'text-gray-400 bg-gray-100 cursor-not-allowed'
           } transition-colors`}
           style={{
-            backgroundColor: message.trim() && !isDisabled ? theme.primaryColor : '',
+            backgroundColor: message.trim() && !isDisabled ? theme.primaryColor : undefined,
           }}
+          aria-label="Enviar"
         >
           <PaperAirplaneIcon className="w-5 h-5" />
         </button>

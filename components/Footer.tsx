@@ -1,4 +1,5 @@
 import React from 'react';
+import MascotImage from './eva/MascotImage';
 import { useLanguage } from '../hooks/useLanguage';
 import { 
   CreditCardIcon, 

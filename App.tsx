@@ -5,7 +5,12 @@ import Hero from './components/Hero';
 import WaveSeparator from './components/WaveSeparator';
 import Loader from './components/Loader';
 import ErrorBoundary from './components/ErrorBoundary';
-import { Chatbot } from './components/chatbot';
+import Chatbot from './components/chatbot/Chatbot';
+import EvaPhoneDock from './components/eva/EvaPhoneDock';
+import EvaSoundHub from './components/eva/EvaSoundHub';
+import EvaBubbleButton from './components/eva/EvaBubbleButton';
+import EvaMascotCTA from './components/EvaMascotCTA';
+import BrandStrip from './components/eva/BrandStrip';
 
 // Carga diferida de componentes pesados
 const TrustBadges = lazy(() => import('./components/TrustBadges'));
@@ -21,6 +26,7 @@ const InsurancePolicies = lazy(() => import('./components/InsurancePolicies'));
 const App: React.FC = () => {
   return (
     <div className="bg-[#F8F9FA] min-h-screen flex flex-col">
+      <EvaSoundHub />
       <Header />
       <main className="flex-grow">
         <ErrorBoundary>
@@ -28,9 +34,11 @@ const App: React.FC = () => {
           
           <Suspense fallback={<Loader />}>
             <TrustBadges />
+            <EvaMascotCTA />
             <QuoteForm />
             <WaveSeparator direction="down" fillColor="#F8F9FA" height="80px" />
             <Benefits />
+            <BrandStrip />
             <WaveSeparator direction="down" fillColor="#212529" height="100px" />
             <TrustSection />
             <InsurancePolicies />
@@ -46,8 +54,12 @@ const App: React.FC = () => {
         <OfferButton />
       </Suspense>
       
-      {/* Chatbot de Asistencia */}
-      <Chatbot />
+      {/* Chatbot dentro de dock tipo iPhone v2 */}
+      <EvaPhoneDock>
+        <Chatbot embedded />
+      </EvaPhoneDock>
+      {/* Burbuja con mascota para abrir/cerrar */}
+      <EvaBubbleButton />
       
       {/* Script de Google Analytics */}
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>

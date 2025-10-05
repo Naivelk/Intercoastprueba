@@ -33,8 +33,9 @@ export const formatPhoneNumber = (phone: string): string => {
  * Formatea una fecha a un formato legible
  */
 export const formatDate = (dateString: string): string => {
+  // Espera formato MM/DD/YYYY y lo muestra friendly en español
   try {
-    const [day, month, year] = dateString.split('/').map(Number);
+    const [month, day, year] = dateString.split('/').map(Number);
     const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -115,7 +116,7 @@ export const calculateEstimatedPrice = (userData: UserData): number => {
   
   // Ajuste por edad (ejemplo simplificado)
   if (userData.birthDate) {
-    const [day, month, year] = userData.birthDate.split('/').map(Number);
+    const [month, day, year] = userData.birthDate.split('/').map(Number);
     const birthDate = new Date(year, month - 1, day);
     const age = new Date().getFullYear() - birthDate.getFullYear();
     
@@ -203,8 +204,9 @@ export const prepareFormData = (userData: UserData): Record<string, any> => {
   // Formatear la fecha de nacimiento para el formato esperado por el backend
   let formattedBirthDate = '';
   if (birthDate) {
-    const [day, month, year] = birthDate.split('/');
-    formattedBirthDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    // birthDate esperado en formato MM/DD/YYYY
+    const [month, day, year] = birthDate.split('/');
+    formattedBirthDate = `${year}-${(month || '').padStart(2, '0')}-${(day || '').padStart(2, '0')}`;
   }
   
   // Preparar datos del formulario

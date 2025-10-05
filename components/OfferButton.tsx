@@ -6,7 +6,7 @@ const OfferButton: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-6 right-24 z-40 sm:bottom-8 sm:right-28">
       <div 
         className="bg-[#2ECC71] text-white py-3 px-6 rounded-full inline-flex items-center gap-3 shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 transform hover:rotate-[-2deg] animate-pulse cursor-pointer"
         onClick={() => {

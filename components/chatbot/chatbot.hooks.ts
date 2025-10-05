@@ -78,13 +78,11 @@ const isValidPhone = (phone: string): boolean => {
 };
 
 const isValidDate = (date: string): boolean => {
-  // Expected format: DD/MM/YYYY
+  // Formato esperado: MM/DD/YYYY (Estados Unidos)
   const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
   if (!dateRegex.test(date)) return false;
-  
-  const [day, month, year] = date.split('/').map(Number);
+  const [month, day, year] = date.split('/').map(Number);
   const dateObj = new Date(year, month - 1, day);
-  
   return (
     dateObj.getFullYear() === year &&
     dateObj.getMonth() === month - 1 &&
@@ -345,6 +343,7 @@ export const useChatbot = (initialMessage?: string): ChatbotContextType & { isOp
       },
     };
     setMessages((prev) => [...prev, newMessage]);
+    try { window.dispatchEvent(new CustomEvent('eva:sound:sent')); } catch {}
     try { if (!(window as any).__EVA_FIRST_USER_TS__) (window as any).__EVA_FIRST_USER_TS__ = Date.now(); } catch {}
     return newMessage;
   }, []);
@@ -378,6 +377,7 @@ export const useChatbot = (initialMessage?: string): ChatbotContextType & { isOp
       } : undefined,
     };
     setMessages(prev => [...prev, newMessage]);
+    try { window.dispatchEvent(new CustomEvent('eva:sound:received')); } catch {}
     return newMessage;
   }, []);
 
@@ -651,13 +651,11 @@ export const useChatbot = (initialMessage?: string): ChatbotContextType & { isOp
         return;
       }
 
-      if (input.includes('Seguro de Auto') || input.includes('Seguro de Hogar') || input.includes('Seguro de Vida') || input.includes('Seguro de Salud')) {
+      if (input.includes('Seguro de Auto') || input.includes('Seguro de Hogar')) {
         // Mostrar detalle de la póliza seleccionada
         let detail = '';
         if (input.includes('Auto')) detail = chatbotConfig.messages.autoPolicyInfo;
         else if (input.includes('Hogar')) detail = chatbotConfig.messages.homePolicyInfo;
-        else if (input.includes('Vida')) detail = chatbotConfig.messages.lifePolicyInfo;
-        else if (input.includes('Salud')) detail = chatbotConfig.messages.healthPolicyInfo;
 
         await addBotMessage({
           content: detail,
@@ -732,13 +730,6 @@ export const useChatbot = (initialMessage?: string): ChatbotContextType & { isOp
             });
             newUserData.currentStep = steps.WELCOME;
             response = '';
-          } else if (lower.includes('menu') || lower.includes('inicio')) {
-            response = {
-              content: chatbotConfig.welcomeMessage,
-              type: 'suggestion' as const,
-              options: [...chatbotConfig.initialSuggestions]
-            } as const;
-            newUserData.currentStep = steps.WELCOME;
           } else {
             response = {
               content: chatbotConfig.welcomeMessage,

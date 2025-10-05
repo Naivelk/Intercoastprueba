@@ -9,12 +9,14 @@ import { ChatMessage as MessageType, ChatbotContextType } from './chatbot.types'
 import { config as chatbotConfig } from './chatbot.config';
 import { useChatbot } from './chatbot.hooks';
 import { onOpenChatbot, onAssistantMood } from './eventBus';
+import InputPortal from '../eva/InputPortal';
 
 interface ChatbotProps {
   isOpen?: boolean;
   onClose?: () => void;
   onOpen?: () => void;
   initialMessage?: string;
+  embedded?: boolean; // render inline without fixed container or floating button
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({
@@ -22,10 +24,12 @@ const Chatbot: React.FC<ChatbotProps> = ({
   onClose,
   onOpen,
   initialMessage,
+  embedded = false,
 }) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const messagesScrollRef = useRef<HTMLDivElement>(null);
   const [isInternalOpen, setIsInternalOpen] = useState(false);
   const isControlled = onClose !== undefined && onOpen !== undefined;
   const isOpen = isControlled ? externalIsOpen : isInternalOpen;
@@ -156,8 +160,11 @@ const Chatbot: React.FC<ChatbotProps> = ({
 
   // Efecto para hacer scroll al final de los mensajes
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    const endEl = messagesEndRef.current;
+    const container = messagesScrollRef.current;
+    if (endEl && container) {
+      // Desplazar el contenedor hasta el final
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
   }, [messages, isOpen]);
 
@@ -171,6 +178,15 @@ const Chatbot: React.FC<ChatbotProps> = ({
       }, 50);
     }
   }, [messages]);
+
+  // Reset handler: listen for global event to restart the chat
+  useEffect(() => {
+    const onReset = () => {
+      try { startNewConversation(); } catch {}
+    };
+    window.addEventListener('chatbot:reset', onReset);
+    return () => window.removeEventListener('chatbot:reset', onReset);
+  }, [startNewConversation]);
 
   // Efecto para detectar clics fuera del chat
   useEffect(() => {
@@ -300,6 +316,57 @@ const Chatbot: React.FC<ChatbotProps> = ({
     },
   };
 
+  // Embedded mode: render only the inner content (messages + input) to be wrapped by a parent dock
+  if (embedded) {
+    return (
+      <div className="w-full h-full flex flex-col">
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={messagesScrollRef as any} role="status" aria-live="polite">
+          {messages.map((message) => (
+            <React.Fragment key={message.id}>
+              <ChatMessage 
+                message={message} 
+                isAssistantSpeaking={message.role === 'assistant' && Boolean(message.isLoading || isLoading)}
+                assistantMood={assistantMood as any}
+                reducedMotion={prefersReducedMotion}
+              />
+            </React.Fragment>
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="px-4 py-2 bg-gray-100 rounded-2xl max-w-[85%] flex space-x-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Chat Input portalized into the dock slot */}
+        <InputPortal targetId="eva-input-slot">
+          <div className="relative" style={{ pointerEvents: 'auto' }}>
+            <ChatInput onSendMessage={handleSendMessage} isDisabled={isLoading} placeholder="Escribe tu mensaje..." />
+            {showInitialSuggestions && (
+              <div className="p-2">
+                <ChatSuggestions onSelect={handleSendMessage} suggestions={initialSuggestions} />
+              </div>
+            )}
+            {hasMessageOptions && (
+              <div className="p-2 border-t border-gray-100">
+                <ChatSuggestions onSelect={handleSendMessage} suggestions={getMessageOptions()} />
+              </div>
+            )}
+            <p className="text-[11px] text-gray-500 text-center mt-1">
+              Eva es una IA. Puede cometer errores. Revisa la información importante.
+            </p>
+          </div>
+        </InputPortal>
+      </div>
+    );
+  }
+  
   // Si el chat está minimizado, mostramos solo el botón flotante
   if (isMinimized) {
     return (
@@ -347,7 +414,14 @@ const Chatbot: React.FC<ChatbotProps> = ({
       {/* Chat Container */}
       <motion.div
         ref={chatContainerRef}
-        className="fixed bottom-24 right-6 w-full max-w-md h-[70vh] max-h-[700px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden"
+        className="fixed right-4 bottom-24 w-[min(100vw-1rem,420px)] h-[70vh] max-h-[720px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden
+                   sm:right-6 sm:bottom-24
+                   xs:right-2 xs:bottom-20
+                   md:w-[420px]
+                   
+                   
+                   
+                   "
         initial="closed"
         animate={isOpen ? 'open' : 'closed'}
         variants={chatVariants}
@@ -402,7 +476,7 @@ const Chatbot: React.FC<ChatbotProps> = ({
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={messagesEndRef} role="status" aria-live="polite">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={messagesScrollRef} role="status" aria-live="polite">
           {messages.map((message) => (
             <React.Fragment key={message.id}>
               <ChatMessage 
@@ -462,7 +536,7 @@ const Chatbot: React.FC<ChatbotProps> = ({
       {/* Floating Button (when chat is closed) */}
       {!isOpen && (
         <motion.div
-          className="fixed bottom-6 right-6 z-50"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
           initial={{ opacity: 0, y: 20, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.9 }}

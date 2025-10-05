@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import QuoteFormReact from './QuoteFormReact';
+import MascotImage from './eva/MascotImage';
 
 const QuoteForm: React.FC = () => {
   const { t } = useLanguage();
@@ -145,7 +146,16 @@ const QuoteForm: React.FC = () => {
     <section className="py-8 md:py-12 w-full bg-gradient-to-b from-white to-gray-50" id="quote-form">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 md:mb-12 max-w-4xl mx-auto">
-          <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+          {/* Mascota centrada arriba y badge debajo */}
+          <div className="flex items-center justify-center mb-3">
+            <MascotImage
+              srcWebp="/eva/eva-baby-clipboard.webp"
+              srcPng="/eva/eva-baby-clipboard.png"
+              alt="EVA te ayuda a cotizar"
+              className="w-28 h-auto md:w-32"
+            />
+          </div>
+          <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-1.5 rounded-full mb-2">
             Cotización en Línea
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">

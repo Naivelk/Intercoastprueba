@@ -26,12 +26,10 @@ export const isChatbotStep = (step: string): step is ChatbotStepValue => {
 };
 
 export const config = {
-  welcomeMessage: "¡Hola! 👋 Soy Eva, tu asistente virtual de Intercoast Insurance. ¿En qué puedo ayudarte hoy? 😊",
+  welcomeMessage: "¡Hola! Soy Eva. ¿Te ayudo a cotizar tu seguro de auto o a contactarnos?",
   initialSuggestions: [
     "Cotizar seguro de auto 🚗",
     "Ver tipos de pólizas 📋",
-    "¿Qué documentos necesito? 📄",
-    "¿Qué puedo preguntar? ❓",
     "Oficinas y contacto 📍"
   ] as const,
   maxMessageLength: 500,
@@ -40,8 +38,6 @@ export const config = {
   policyOptions: [
     'Seguro de Auto 🚗',
     'Seguro de Hogar 🏠',
-    'Seguro de Vida 👨‍👩‍👧',
-    'Seguro de Salud 🏥',
     'Volver al inicio ⬅️',
   ] as const,
   theme: {
@@ -72,19 +68,12 @@ export const config = {
       '🏠 Seguro de Hogar\n' +
       'Protege tu vivienda y pertenencias frente a incendios, robos, responsabilidad civil y fenómenos naturales (según plan).\n' +
       '¿Qué deseas hacer ahora?',
-    lifePolicyInfo:
-      '👨‍👩‍👧 Seguro de Vida\n' +
-      'Apoyo financiero a tus beneficiarios, opciones temporales y vitalicias, riders por enfermedades graves.\n' +
-      '¿Qué deseas hacer ahora?',
-    healthPolicyInfo:
-      '🏥 Seguro de Salud\n' +
-      'Cobertura médica integral con redes hospitalarias, consultas, emergencias y medicamentos (según plan).\n' +
-      '¿Qué deseas hacer ahora?',
+    // Eliminadas pólizas de Vida y Salud para este flujo
 
     askName: "¿Cuál es tu nombre completo?",
     askEmail: "¿Cuál es tu correo electrónico?",
     askPhone: "¿Cuál es tu número de teléfono?",
-    askBirthdate: "¿Cuál es tu fecha de nacimiento? (DD/MM/AAAA)",
+    askBirthdate: "¿Cuál es tu fecha de nacimiento? (MM/DD/AAAA)",
     askAddress: "¿Cuál es tu dirección completa en California?",
     askDocument: "¿Cuál es tu número de identificación o licencia de conducir?",
     askVehicleCount: `¿Cuántos vehículos deseas asegurar? (Máximo 5)`, 
@@ -99,7 +88,7 @@ export const config = {
   errorMessages: {
     invalidEmail: "Por favor ingresa un correo electrónico válido.",
     invalidPhone: "Por favor ingresa un número de teléfono válido.",
-    invalidBirthdate: "Por favor ingresa una fecha de nacimiento válida (DD/MM/AAAA).",
+    invalidBirthdate: "Por favor ingresa una fecha de nacimiento válida (MM/DD/AAAA).",
     invalidVehicleCount: `Por favor ingresa un número entre 1 y 5.`,
     invalidYear: "Por favor ingresa un año válido (ej: 2020).",
     requiredField: "Este campo es obligatorio.",

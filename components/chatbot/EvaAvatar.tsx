@@ -31,17 +31,17 @@ const EvaAvatar: React.FC<EvaAvatarProps> = ({ size = 32, isSpeaking = false, cl
     }
   }, [reducedMotion]);
 
-  // Mouth path by mood
+  // Mouth path by mood (smaller, baby-like)
   const mouthPath = useMemo(() => {
     switch (mood) {
       case 'happy':
-        return `M ${s * 0.36} ${s * 0.62} Q ${s * 0.5} ${s * 0.74}, ${s * 0.64} ${s * 0.62}`;
+        return `M ${s * 0.40} ${s * 0.64} Q ${s * 0.5} ${s * 0.72}, ${s * 0.60} ${s * 0.64}`;
       case 'concerned':
-        return `M ${s * 0.36} ${s * 0.66} Q ${s * 0.5} ${s * 0.58}, ${s * 0.64} ${s * 0.66}`;
+        return `M ${s * 0.40} ${s * 0.66} Q ${s * 0.5} ${s * 0.60}, ${s * 0.60} ${s * 0.66}`;
       case 'thinking':
-        return `M ${s * 0.44} ${s * 0.64} Q ${s * 0.5} ${s * 0.64}, ${s * 0.56} ${s * 0.64}`;
+        return `M ${s * 0.46} ${s * 0.64} Q ${s * 0.5} ${s * 0.64}, ${s * 0.54} ${s * 0.64}`;
       default:
-        return `M ${s * 0.38} ${s * 0.62} Q ${s * 0.5} ${s * 0.70}, ${s * 0.62} ${s * 0.62}`;
+        return `M ${s * 0.42} ${s * 0.64} Q ${s * 0.5} ${s * 0.68}, ${s * 0.58} ${s * 0.64}`;
     }
   }, [mood, s]);
 
@@ -77,44 +77,36 @@ const EvaAvatar: React.FC<EvaAvatarProps> = ({ size = 32, isSpeaking = false, cl
         </defs>
         <circle cx={cx} cy={cy} r={r} fill="url(#evaGrad)" />
 
-        {/* Hair (simple top arc) */}
+        {/* Small curl of baby hair */}
         <path
-          d={`M ${s * 0.05} ${s * 0.35}
-              Q ${s * 0.5} ${s * 0.0}, ${s * 0.95} ${s * 0.35}
-              L ${s * 0.95} ${s * 0.15}
-              Q ${s * 0.5} ${s * -0.05}, ${s * 0.05} ${s * 0.15} Z`}
-          fill="#ef4444"
-          opacity={0.7}
+          d={`M ${s * 0.45} ${s * 0.18} q ${s * 0.06} ${-s * 0.10}, ${s * 0.12} ${0} q ${-s * 0.04} ${s * 0.06}, ${-s * 0.12} ${s * 0.06}`}
+          fill="none"
+          stroke="#ef4444"
+          strokeWidth={2}
+          strokeLinecap="round"
         />
 
-        {/* Face */}
-        <circle cx={cx} cy={cy} r={s * 0.36} fill="#fffaf0" />
+        {/* Face (rounder, baby) */}
+        <circle cx={cx} cy={cy} r={s * 0.38} fill="#fffaf0" />
 
-        {/* Eyebrows (simple lines) */}
-        <line x1={s * 0.32} y1={s * 0.40 + browTilt.left} x2={s * 0.44} y2={s * 0.40 - browTilt.left} stroke="#1f2937" strokeWidth={1.5} strokeLinecap="round" />
-        <line x1={s * 0.56} y1={s * 0.40 - browTilt.right} x2={s * 0.68} y2={s * 0.40 + browTilt.right} stroke="#1f2937" strokeWidth={1.5} strokeLinecap="round" />
+        {/* Eyebrows (soft) */}
+        <line x1={s * 0.34} y1={s * 0.38 + browTilt.left} x2={s * 0.44} y2={s * 0.38 - browTilt.left} stroke="#1f2937" strokeWidth={1.2} strokeLinecap="round" />
+        <line x1={s * 0.56} y1={s * 0.38 - browTilt.right} x2={s * 0.66} y2={s * 0.38 + browTilt.right} stroke="#1f2937" strokeWidth={1.2} strokeLinecap="round" />
 
-        {/* Eyes */}
-        <motion.ellipse
-          cx={s * 0.38}
-          cy={s * 0.48}
-          rx={s * 0.045}
-          ry={s * 0.06}
-          fill="#1f2937"
-          animate={prefersReduced ? undefined : { scaleY: [1, 1, 0.1, 1] }}
-          transition={prefersReduced ? undefined : { duration: 4, repeat: Infinity, times: [0, 0.88, 0.9, 1] }}
-          style={{ originY: 'center', originX: 'center' }}
-        />
-        <motion.ellipse
-          cx={s * 0.62}
-          cy={s * 0.48}
-          rx={s * 0.045}
-          ry={s * 0.06}
-          fill="#1f2937"
-          animate={prefersReduced ? undefined : { scaleY: [1, 1, 0.1, 1] }}
-          transition={prefersReduced ? undefined : { duration: 4.2, repeat: Infinity, times: [0, 0.9, 0.92, 1] }}
-          style={{ originY: 'center', originX: 'center' }}
-        />
+        {/* Eyes with round glasses */}
+        <g>
+          {/* Glasses frames */}
+          <circle cx={s * 0.38} cy={s * 0.48} r={s * 0.08} fill="none" stroke="#1f2937" strokeWidth={1.5} />
+          <circle cx={s * 0.62} cy={s * 0.48} r={s * 0.08} fill="none" stroke="#1f2937" strokeWidth={1.5} />
+          <line x1={s * 0.46} y1={s * 0.48} x2={s * 0.54} y2={s * 0.48} stroke="#1f2937" strokeWidth={1.2} />
+          {/* Pupils */}
+          <motion.circle cx={s * 0.38} cy={s * 0.48} r={s * 0.02} fill="#1f2937"
+            animate={prefersReduced ? undefined : { cy: [s * 0.48, s * 0.475, s * 0.48] }}
+            transition={prefersReduced ? undefined : { duration: 4, repeat: Infinity }} />
+          <motion.circle cx={s * 0.62} cy={s * 0.48} r={s * 0.02} fill="#1f2937"
+            animate={prefersReduced ? undefined : { cy: [s * 0.48, s * 0.475, s * 0.48] }}
+            transition={prefersReduced ? undefined : { duration: 4.2, repeat: Infinity }} />
+        </g>
 
         {/* Smile / Mouth */}
         <motion.path
@@ -126,6 +118,10 @@ const EvaAvatar: React.FC<EvaAvatarProps> = ({ size = 32, isSpeaking = false, cl
           transition={isSpeaking && !prefersReduced ? { duration: 0.6, repeat: Infinity } : undefined}
           style={{ originY: s * 0.62, originX: s * 0.5 }}
         />
+
+        {/* Two front teeth */}
+        <rect x={s * 0.485} y={s * 0.64} width={s * 0.012} height={s * 0.018} fill="#fff" rx={1} />
+        <rect x={s * 0.503} y={s * 0.64} width={s * 0.012} height={s * 0.018} fill="#fff" rx={1} />
 
         {/* Cheek blush */}
         <circle cx={s * 0.30} cy={s * 0.58} r={s * 0.04} fill="#fca5a5" opacity={mood === 'concerned' ? 0.3 : 0.6} />

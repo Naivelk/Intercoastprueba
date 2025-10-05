@@ -4,12 +4,15 @@ import styled from 'styled-components';
 
 // Styled components for better performance and cleaner code
 const SuggestionsContainer = styled.div`
-  margin: 0.5rem 0 0.75rem;
+  margin: 0.5rem 0 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 `;
 
 const SuggestionsGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
   margin: 0.25rem 0;
 `;

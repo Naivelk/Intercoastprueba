@@ -31,15 +31,13 @@ const predefinedResponses: Record<string, string> = {
   'adios': '¡Hasta luego! Si tienes más preguntas en el futuro, estaré aquí para ayudarte. ¡Que tengas un excelente día!',
   'tipos de seguros': 'Ofrecemos varios tipos de seguros:\n\n' +
     '🚗 Seguro de Auto\n' +
-    '🏠 Seguro de Hogar\n' +
-    '👨‍👩‍👧 Seguro de Vida\n' +
-    '🏥 Seguro de Salud\n\n' +
+    '🏠 Seguro de Hogar\n\n' +
     '¿Te gustaría más información sobre alguno en particular?',
   'documentos necesarios': 'Para cotizar tu seguro, necesitarás los siguientes documentos según el tipo de seguro:\n\n' +
     '📝 Identificación oficial (INE o pasaporte)\n' +
     '🚗 Para seguros de auto: licencia de conducir y tarjeta de circulación\n' +
     '🏠 Para seguros de hogar: comprobante de domicilio y escrituras (si aplica)',
-  'cotizar seguro': '¡Perfecto! Para generar una cotización, necesitaré algunos datos. ¿Qué tipo de seguro te interesa? (auto, hogar, vida, salud)'
+  'cotizar seguro': '¡Perfecto! Para generar una cotización, necesitaré algunos datos. ¿Qué tipo de seguro te interesa? (auto u hogar)'
 };
 
 export async function getAIResponse(
